@@ -5,3 +5,4 @@
 - Xavier Jiménez \<<xavier.jimenez@qubiq.es>\>
 - Dennis Sluijk \<<d.sluijk@onestein.nl>\>
 - Eric Lembregts \<<eric@lembregts.eu>\>
+- Tris Doan \<<tridm@trobz.com>\>
