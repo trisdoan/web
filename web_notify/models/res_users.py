@@ -130,8 +130,8 @@ class ResUsers(models.Model):
             "action": action,
             "params": dict(params or []),
         }
-        for parner in target:
-            parner._bus_send(
+        for partner in target:
+            partner._bus_send(
                 "web_notify",
                 bus_message,
             )

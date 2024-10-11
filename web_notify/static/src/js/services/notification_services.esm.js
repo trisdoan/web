@@ -5,13 +5,11 @@ export const webNotificationService = {
     dependencies: ["bus_service", "notification", "action"],
 
     start(env, {bus_service, notification: notificationService, action}) {
-        function displaywebNotification(notification) {
+        function displayWebNotification(notification) {
             let buttons = [];
             if (notification.action) {
-                const params =
-                    (notification.action.context &&
-                        notification.action.context.params) ||
-                    {};
+                const params = notification.action.context?.params || {};
+
                 buttons = [
                     {
                         name: params.button_name || env._t("Open"),
@@ -44,7 +42,7 @@ export const webNotificationService = {
         }
 
         bus_service.subscribe("web_notify", (payload) => {
-            displaywebNotification(payload);
+            displayWebNotification(payload);
         });
         bus_service.start();
     },
