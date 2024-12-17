@@ -17,7 +17,7 @@
     "assets": {
         "web.assets_backend": [
             "/web_chatter_position/static/src/**/*.js",
-            "/web_chatter_position/static/src/**/*.scss",
+            "/web_chatter_position/static/src/views/form/form_controller.xml",
         ],
     },
 }

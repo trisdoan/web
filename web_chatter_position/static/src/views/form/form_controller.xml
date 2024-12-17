@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+  <t t-inherit="web.FormView" t-inherit-mode="extension">
+    <xpath expr="//div[hasclass('o_form_view_container')]/Layout/t[@t-set-slot='control-panel-create-button']/t[@t-if='canCreate']" position="replace">
+      <span>test</span>
+      <!-- <button class="btn btn-secondary o_chatter_position_button d-none d-xxl-inline-block" t-on-click="onClickChangePosition" type="button"> -->
+      <!--   <i class="fa fa-arrows-h"></i> -->
+      <!-- </button> -->
+    </xpath>
+  </t>
+</templates>
