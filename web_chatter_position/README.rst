@@ -29,7 +29,7 @@ Chatter Position
 |badge1| |badge2| |badge3| |badge4| |badge5|
 
 Configurable chatter position from the user preferences.
-
+Change Chatter Position on the fly.
 Supports Both Community & Enterprise Edition.
 
 **Table of contents**
@@ -42,6 +42,7 @@ Usage
 
 #. There's a **Chatter Position** option in **User Preferences**, where you can
 choose between ``auto``, ``bottom`` and ``sided``.
+#. The position can also be changed on the fly using a new button on the top right side of Form Views.
 
 Bug Tracker
 ===========
@@ -70,6 +71,9 @@ Contributors
 * `Camptocamp <https://www.camptocamp.com>`_
 
   * Iván Todorovich <ivan.todorovich@camptocamp.com>
+* `Trobz <https://www.trobz.com>`
+
+  * Tris Doan <tridm@trobz.com>
 
 Maintainers
 ~~~~~~~~~~~

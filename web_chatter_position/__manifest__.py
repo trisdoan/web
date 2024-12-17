@@ -14,6 +14,11 @@
     "assets": {
         "web.assets_backend": [
             "/web_chatter_position/static/src/**/*.js",
+            (
+                "after",
+                "/web/static/src/views/form/form_controller.xml",
+                "/web_chatter_position/static/src/views/form/form_controller.xml",
+            ),
         ],
     },
 }
