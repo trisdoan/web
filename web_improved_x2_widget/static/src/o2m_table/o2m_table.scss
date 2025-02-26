@@ -1,0 +1,148 @@
+.o_field_o2m_table {
+    width: 100%;
+    .o_field_table {
+        overflow: auto;
+    }
+
+    .o_pagination {
+        select {
+            width: 100px;
+        }
+    }
+
+    .wrapper-table {
+        resize: vertical;
+        overflow: auto;
+
+        .dropdown-menu {
+            z-index: 1000;
+        }
+
+        .o_widget_table {
+            padding: 0px;
+
+            thead {
+                background: #f0f0f0;
+                margin: 0;
+                position: sticky;
+                top: 0;
+                z-index: 50;
+            }
+
+            tr {
+                &.o_edit {
+                    background-color: #f0f0f0;
+                }
+                &:hover {
+                    background-color: #f0f0f0;
+                }
+            }
+
+            th,
+            td {
+                box-shadow: inset 0 0 0 1px lightgray;
+                padding: 0.25rem;
+            }
+
+            th {
+                padding: 2px 4px;
+                position: relative;
+                font-weight: bold;
+                text-align: center;
+                height: 40px;
+
+                span.o_column_header {
+                    cursor: n-resize;
+                    overflow: auto;
+                }
+            }
+
+            td {
+                height: 40px;
+
+                .o_field_widget {
+                    width: 100% !important;
+                }
+
+                .form-check-input:focus {
+                    outline: 1px solid blue;
+                }
+
+                .o_input {
+                    border: none;
+
+                    &:focus {
+                        background-color: white;
+                        border: 1px solid blue;
+                        border-radius: 4px;
+                    }
+
+                    &.o_field_translate {
+                        margin-left: 0px;
+                        width: 100%;
+                    }
+                }
+
+                &.o_change_data {
+                    color: rgb(255, 50, 50);
+                    select {
+                        color: rgb(255, 50, 50);
+                    }
+
+                    .o-checkbox > input {
+                        background-color: rgb(255, 50, 50);
+                    }
+                }
+
+                &.o_list_number {
+                    text-align: right;
+                    direction: ltr;
+                }
+
+                .o_dropdown_button {
+                    visibility: inherit !important;
+                }
+            }
+
+            .resizer {
+                position: absolute;
+                top: 0;
+                height: 100%;
+                width: 5px;
+                background: rgba(0, 0, 0, 0.5);
+                cursor: col-resize;
+                user-select: none;
+                touch-action: none;
+
+                &.ltr {
+                    right: 0;
+                }
+
+                &.rtl {
+                    left: 0;
+                }
+
+                &.isResizing {
+                    background: blue;
+                    opacity: 1;
+                }
+            }
+        }
+    }
+}
+
+@media (hover: hover) {
+    .resizer {
+        opacity: 0;
+    }
+
+    *:hover > .resizer {
+        opacity: 1;
+    }
+}
+
+@media screen and(max-width:480px) {
+    .o_header_table {
+        flex-wrap: wrap !important;
+    }
+}

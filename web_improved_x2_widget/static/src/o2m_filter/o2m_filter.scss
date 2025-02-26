@@ -1,0 +1,36 @@
+.o2m_table_filter {
+    width: 100%;
+    .o_input_column {
+        width: 100%;
+        outline: none;
+        border-width: 0px !important;
+    }
+
+    .o_advanced_search {
+        font-size: small;
+        width: inherit;
+
+        input.o_input:focus {
+            outline: none;
+        }
+
+        button {
+            border: none;
+            border-radius: 5px;
+            width: inherit;
+
+            &.dropdown-toggle {
+                background-color: transparent;
+            }
+
+            .o_search {
+                max-width: 100px;
+                overflow-x: clip;
+                color: gray;
+            }
+        }
+        .o_item {
+            font-size: small;
+        }
+    }
+}

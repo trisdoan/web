@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="o2m_table.O2MFilter" owl="1">
+        <div class="o2m_table_filter">
+            <t
+                t-component="searchColumn.component"
+                t-props="searchColumn.componentProps"
+            />
+        </div>
+    </t>
+
+    <t t-name="owl_table.SearchChar" owl="1">
+        <input
+            t-ref="input_query"
+            t-on-click.stop="() =&gt; {}"
+            t-on-keydown="onSearchKeydown"
+            t-on-input="onSearchInput"
+            t-on-blur="onBlur"
+            placeholder="Search..."
+            class="o_input o_input_column rounded-0 ms-1 me-1"
+        />
+    </t>
+
+    <t t-name="owl_table.SearchDate" owl="1">
+        <Dropdown position="'bottom-end'">
+            <t t-set-slot="content">
+                <span t-if="!state.domain.length" style="color:#D3D5D7">
+                    <i class="fa fa-search" aria-hidden="true" />
+                </span>
+                <span t-else="" t-esc="domainString" />
+            </t>
+            <DropdownItem class="'p-1 o_item  bg-white'" closingMode="'none'">
+                <div class="d-flex flex-row">
+                    <div class="fw-bold me-2">&gt;=</div>
+                    <DateTimeInput
+                        type="'date'"
+                        value="this.state.fromDate"
+                        onChange="(date) =&gt; this.onFromDateChanged(date)"
+                    />
+                </div>
+                <div class="d-flex flex-row mt-1">
+                    <div class="fw-bold me-2">&lt;=</div>
+                    <DateTimeInput
+                        type="'date'"
+                        value="this.state.toDate"
+                        onChange="(date) =&gt; this.onToDateChanged(date)"
+                    />
+                </div>
+            </DropdownItem>
+            <DropdownItem class="'p-0 o_item text-center bg-white'" closingMode="'all'">
+                <div class="d-flex justify-content-between w-100">
+                    <button
+                        class="btn btn-primary"
+                        t-on-click="() =&gt; this.onApply()"
+                        t-att-disabled="state.disabledButton"
+                        style="width:inherit"
+                    >Apply</button>
+                    <button
+                        class="btn btn-secondary"
+                        t-on-click="() =&gt; this.onClear()"
+                        style="width:inherit"
+                    >Clear</button>
+                </div>
+            </DropdownItem>
+        </Dropdown>
+    </t>
+
+    <t t-name="owl_table.SearchFloat" owl="1">
+        <Dropdown position="'bottom-end'">
+            <t t-set-slot="content">
+                <!-- <span t-esc="domainString"></span> -->
+                <span t-if="!state.domain.length" style="color:#D3D5D7">
+                    <i class="fa fa-search" aria-hidden="true" />
+                </span>
+                <span t-else="" t-esc="domainString" />
+            </t>
+            <DropdownItem class="'p-1 o_item  bg-white'" closingMode="'none'">
+                <div class="d-flex flex-row">
+                    <div class="fw-bold me-2">&gt;=</div>
+                    <input
+                        class="o_input"
+                        t-model.number="state.fromValue"
+                        tabindex="-1"
+                        t-on-click.stop="(ev) => this.focusInput(ev)"
+                    />
+                </div>
+                <div class="d-flex flex-row mt-1">
+                    <div class="fw-bold me-2">&lt;=</div>
+                    <input
+                        class="o_input"
+                        t-model.number="state.toValue"
+                        tabindex="-1"
+                        t-on-click="(ev) => this.focusInput(ev)"
+                    />
+                </div>
+            </DropdownItem>
+            <DropdownItem class="'p-0 o_item text-center bg-white'" closingMode="'all'">
+                <div class="d-flex justify-content-between w-100">
+                    <button
+                        class="btn btn-primary"
+                        t-on-click="() =&gt; this.onApply()"
+                        t-att-disabled="state.disabledButton"
+                        style="width:inherit"
+                    >Apply</button>
+                    <button
+                        class="btn btn-secondary"
+                        t-on-click="() =&gt; this.onClear()"
+                        style="width:inherit"
+                    >Clear</button>
+                </div>
+            </DropdownItem>
+        </Dropdown>
+    </t>
+
+    <t t-name="owl_table.SearchSelection" owl="1">
+        <Dropdown position="'bottom-end'">
+            <t t-set-slot="content">
+                <div class="o_search">
+                    <span t-if="!state.domain.length">
+                        <i class="fa fa-search" aria-hidden="true" />
+                    </span>
+                    <span t-else="" t-esc="label" />
+                </div>
+            </t>
+            <DropdownItem
+                onSelected="() =&gt; this.onSelectAll()"
+                class="'p-1 o_item'"
+                closingMode="'none'"
+            >
+                <div class="d-flex justify-content-between">
+                    <div>All</div>
+                    <i t-if="state.checkedAll" class="fa fa-check" aria-hidden="true" />
+                </div>
+            </DropdownItem>
+            <t t-foreach="state.selection" t-as="sel" t-key="sel_index">
+                <DropdownItem
+                    class="'p-1 o_item'"
+                    closingMode="'none'"
+                    onSelected="() =&gt; this.onSelectOne(sel)"
+                >
+                    <div class="d-flex justify-content-between">
+                        <div t-esc="sel.label" />
+                        <i t-if="sel.checked" class="fa fa-check" aria-hidden="true" />
+                    </div>
+                </DropdownItem>
+            </t>
+            <DropdownItem class="'p-0 o_item text-center bg-white'" closingMode="'all'">
+                <div class="d-flex justify-content-between w-100">
+                    <button
+                        class="btn btn-primary"
+                        t-on-click="() =&gt; this.onApply()"
+                        t-att-disabled="state.disabledButton"
+                        style="width:inherit"
+                    >Apply</button>
+                    <button
+                        class="btn btn-secondary"
+                        t-on-click="() =&gt; this.onClear()"
+                        style="width:inherit"
+                    >Clear</button>
+                </div>
+            </DropdownItem>
+        </Dropdown>
+    </t>
+
+</templates>

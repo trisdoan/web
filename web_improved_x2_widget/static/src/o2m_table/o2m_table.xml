@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="owl_table.O2MTableField">
+        <t t-if="this.props.viewMode == 'kanban'">
+            <X2ManyField t-props="props" />
+        </t>
+        <t t-else="">
+            <div t-att-class="className">
+                <div class="o_header_table d-flex justify-content-between mb-1">
+                    <div class="o_button_container d-flex flex-wrap gap-1">
+                        <t t-if="displayCreate">
+                            <t t-foreach="creates" t-as="create" t-key="create_index">
+                                <button
+                                    t-if="create.type === 'create'"
+                                    class="btn btn-primary"
+                                    t-att-class="create_index !== 0 ? 'gap-1' : ''"
+                                    t-on-click.stop.prevent="() =&gt; this.addNewRecord(create.context)"
+                                >
+                                    <span t-esc="create.string" />
+                                </button>
+                                <ViewButton
+                                    t-if="create.type === 'button'"
+                                    className="`${create.className} ${create_index !== 0 ? 'gap-1' : ''}`"
+                                    clickParams="create.clickParams"
+                                    icon="create.icon"
+                                    record="list"
+                                    string="create.string"
+                                    title="create.title"
+                                    context="create.context"
+                                />
+                            </t>
+                        </t>
+                        <t t-if="displayDelete">
+                            <button
+                                t-if="table.getIsSomeRowsSelected() or table.getIsAllRowsSelected()"
+                                class="btn btn-outline-primary"
+                                t-on-click.stop.prevent="() =&gt; this.onDeleteRecord()"
+                            >
+                                Remove
+                            </button>
+                        </t>
+                        <t
+                            t-if="table.getIsSomeRowsSelected() or table.getIsAllRowsSelected()"
+                        >
+                            <t
+                                t-foreach="buttonGroups"
+                                t-as="buttonGroup"
+                                t-key="buttonGroup_index"
+                            >
+                                <t
+                                    t-foreach="buttonGroup.buttons"
+                                    t-as="button"
+                                    t-key="button_index"
+                                >
+                                    <ViewButton
+                                        t-if="!evalInvisibleButtonGroup(button.invisible)"
+                                        className="`${button.className} ${button_index !== 0 ? 'gap-1' : ''}`"
+                                        clickParams="button.clickParams"
+                                        icon="button.icon"
+                                        record="list"
+                                        string="button.string"
+                                        title="button.title"
+                                        onClick="() =&gt; this.onClickButtonGroup(button.clickParams)"
+                                    />
+                                </t>
+                            </t>
+                        </t>
+                    </div>
+                    <div class="o_pagination d-flex flex-wrap gap-1">
+                        <button
+                            class="border rounded p-1"
+                            t-on-click="() =&gt; table.firstPage()"
+                            t-att-disabled="!table.getCanPreviousPage()"
+                        >
+                            &lt; &lt;
+                        </button>
+                        <button
+                            class="border rounded p-1"
+                            t-on-click="() =&gt; this.previousPage()"
+                            t-att-disabled="!table.getCanPreviousPage()"
+                        >
+                            &lt;
+                        </button>
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <span
+                                t-esc="table.getState().pagination.pageIndex + 1"
+                            />
+                                <span>/</span>
+                                <span t-esc="table.getPageCount().toLocaleString()" />
+                                (<span t-esc="this.state.filterIds.length" />)
+
+                            </div>
+                        </div>
+                        <button
+                            class="border rounded p-1"
+                            t-on-click="() =&gt; this.nextPage()"
+                            t-att-disabled="!table.getCanNextPage()"
+                        >
+                            &gt;
+                        </button>
+                        <button
+                            class="border rounded p-1"
+                            t-on-click="() =&gt; this.lastPage()"
+                            t-att-disabled="!table.getCanNextPage()"
+                        >
+                            &gt; &gt;
+                        </button>
+                        <div>
+                            <input
+                                type="number"
+                                min="1"
+                                t-att-max="table.getPageCount()"
+                                t-att-value="table.getState().pagination.pageIndex + 1"
+                                t-on-change="e =&gt; this.goToPage(ev)"
+                                t-on-keyup="e =&gt; this.goToPage(ev)"
+                                class="border p-1 rounded w-16"
+                            />
+                        </div>
+                        <select
+                            class="border p-1 rounded w-16"
+                            t-att-value="table.getState().pagination.pageSize"
+                            t-on-change="(ev) =&gt; this.setPageSize(ev)"
+                        >
+                            <t
+                                t-foreach="state.pageSizes"
+                                t-as="pageSize"
+                                t-key="pageSize_index"
+                            >
+                                <option
+                                    t-att-key="pageSize[1]"
+                                    t-att-value="pageSize[1]"
+                                ><t t-esc="pageSize[0]" /> Rows</option>
+                            </t>
+                        </select>
+                    </div>
+                </div>
+                <div class="wrapper-table o_list_renderer o_renderer" t-ref="table">
+                    <table
+                        class="o_widget_table"
+                        t-att-style="'width:' + table.getCenterTotalSize() + 'px'"
+                    >
+                        <thead>
+                            <th
+                                style="z-index:1;background-color:#f0f0f0"
+                                class="text-center align-middle pe-1 cursor-pointer"
+                                tabindex="-1"
+                            >
+                                <div
+                                    class="o_optional_columns_dropdown d-print-none text-center border-top-0"
+                                >
+                                    <Dropdown>
+                                        <button class="btn p-0" tabindex="-1">
+                                            <i
+                                                class="o_optional_columns_dropdown_toggle oi oi-fw oi-settings-adjust"
+                                            />
+                                        </button>
+                                        <t t-set-slot="content">
+                                            <t
+                                                t-foreach="table.getAllLeafColumns()"
+                                                t-as="leafColumn"
+                                                t-key="leafColumn_index"
+                                            >
+                                                <DropdownItem
+                                                    class="'p-1 o_item'"
+                                                    closingMode="'none'"
+                                                >
+                                                    <div class="d-flex flex-row ps-1">
+                                                        <input
+                                                            type="checkbox"
+                                                            class="form-check-input"
+                                                            t-att-checked="leafColumn.getIsVisible()"
+                                                            t-on-change="leafColumn.getToggleVisibilityHandler()"
+                                                        />
+                                                        <div
+                                                            class="ps-2"
+                                                            t-esc="leafColumn.columnDef.header"
+                                                        />
+                                                    </div>
+                                                </DropdownItem>
+                                            </t>
+                                        </t>
+                                    </Dropdown>
+                                </div>
+                            </th>
+
+                            <tr
+                                t-foreach="table.getHeaderGroups()"
+                                t-as="headerGroup"
+                                t-key="headerGroup.id"
+                            >
+                                <th
+                                    style="opacity:0.95;position:sticky;width:30px;left:0px;z-index:1;background-color:#f0f0f0"
+                                    class="text-center align-middle pe-1 cursor-pointer"
+                                    tabindex="-1"
+                                    t-on-click.stop="table.getToggleAllRowsSelectedHandler()"
+                                >
+                                    <input
+                                        type="checkbox"
+                                        class="form-check-input"
+                                        t-att-checked="table.getIsAllRowsSelected()"
+                                        t-att-indeterminate="table.getIsSomeRowsSelected()"
+                                        t-on-change="table.getToggleAllRowsSelectedHandler()"
+                                    />
+                                </th>
+                                <th
+                                    t-foreach="headerGroup.headers"
+                                    t-as="header"
+                                    t-key="header.id"
+                                    t-att-style="getCommonPinningStyles(header.column)"
+                                >
+                                    <div
+                                        class="d-flex"
+                                        style="width:auto"
+                                        t-on-click="(ev) =&gt; this.toggleSorting(header,ev)"
+                                    >
+                                        <span
+                                            class="o_column_header d-block min-w-0 flex-grow-1"
+                                            t-esc="header.column.columnDef.header"
+                                        />
+                                        <t t-if="header.column.getIsSorted()">
+                                            <t
+                                                t-if="['integer','float','monetary'].includes(this.archInfo.fields[header.id].type)"
+                                            >
+                                                <i
+                                                    t-if="header.column.getNextSortingOrder() === 'asc'"
+                                                    class="fa fa-sort-numeric-desc"
+                                                />
+                                                <i
+                                                    t-else=""
+                                                    class="fa fa-sort-numeric-asc"
+                                                />
+                                            </t>
+                                            <t t-else="">
+                                                <i
+                                                    t-if="header.column.getNextSortingOrder() === 'asc'"
+                                                    class="fa fa-sort-alpha-desc"
+                                                />
+                                                <i
+                                                    t-else=""
+                                                    class="fa fa-sort-alpha-asc"
+                                                />
+                                            </t>
+                                        </t>
+                                    </div>
+                                    <div
+                                        t-if="header.column.columnDef.cell.widget !== 'handle'"
+                                        class="d-flex justify-content-between"
+                                    >
+                                        <button
+                                            class="border rounded"
+                                            t-on-click="(ev) =&gt; this.pinColumnToLeft(header, ev)"
+                                        >
+                                            <span
+                                                t-if="header.column.getIsPinned() === 'left'"
+                                            >X</span>
+                                            <span t-else="">
+                                                &lt;
+                                            </span>
+                                        </button>
+                                        <O2MFilter
+                                            field="this.archInfo.fields[header.id]"
+                                            list="list"
+                                            fieldDomain="state.o2mFieldDomain"
+                                            filter="() =&gt; this.filterO2M()"
+                                        />
+                                        <button
+                                            class="border rounded"
+                                            t-on-click="(ev) =&gt; this.pinColumnToRight(header, ev)"
+                                        >
+                                            <span
+                                                t-if="header.column.getIsPinned() === 'right'"
+                                            >X</span>
+                                            <span t-else="">
+                                                &gt;
+                                            </span>
+                                        </button>
+                                    </div>
+                                    <div
+                                        class="resizer ltr"
+                                        t-on-dblclick="() =&gt; header.column.resetSize()"
+                                        t-on-mousedown="header.getResizeHandler()"
+                                        t-on-touchstart="header.getResizeHandler()"
+                                        t-att-class="header.column.getIsResizing() ? 'isResizing' : ''"
+                                    />
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                t-foreach="table.getRowModel().rows"
+                                t-att-class="getRowClass(getRecord(row.original))"
+                                t-as="row"
+                                t-key="getRecord(row.original).id"
+                                t-att-id="getRecord(row.original).id"
+                            >
+                                <td
+                                    class="text-center align-middle pe-1 cursor-pointer"
+                                    style="opacity:0.95;position:sticky;width:30px;left:0px;z-index:1;background-color:#f0f0f0"
+                                    tabindex="-1"
+                                >
+                                    <input
+                                        tabindex="-1"
+                                        type="checkbox"
+                                        class="form-check-input"
+                                        t-att-checked="row.getIsSelected()"
+                                        t-on-change="row.getToggleSelectedHandler()"
+                                    />
+                                </td>
+                                <t
+                                    t-foreach="row.getVisibleCells()"
+                                    t-as="cell"
+                                    t-key="cell.id"
+                                >
+                                    <t
+                                        t-set="column"
+                                        t-value="getColumnVisible(cell.column.id)"
+                                    />
+                                    <t t-if="column.type === 'field'">
+                                        <t
+                                            t-set="isInvisible"
+                                            t-value="this.evalInvisible(column.invisible, getRecord(row.original)) or !(column.name in getRecord(row.original).data)"
+                                        />
+                                        <td
+                                            class="o_data_cell cursor-pointer"
+                                            t-att-class="getCellClass(column, getRecord(row.original))"
+                                            t-att-style="getCommonPinningStyles(cell.column)"
+                                            t-att-name="column.name"
+                                            t-att-colspan="column.colspan"
+                                            t-on-keydown="(ev) =&gt; this.onCellKeydown(ev, row.original)"
+                                            t-on-click="(ev) =&gt; this.onCellClicked(row.original, column, ev)"
+                                            tabindex="-1"
+                                        >
+                                            <t t-if="!isInvisible">
+                                                <Field
+                                                    name="column.name"
+                                                    record="getRecord(row.original)"
+                                                    type="column.widget"
+                                                    class="getFieldClass(column)"
+                                                    fieldInfo="column"
+                                                    t-props="getFieldProps(getRecord(row.original), column)"
+                                                />
+                                            </t>
+                                        </td>
+                                    </t>
+                                </t>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </t>
+    </t>
+
+</templates>
